@@ -4,7 +4,7 @@ namespace src\Entity;
 
 class Service
 {
-    private int $id;
+    private int $id_service;
     private string $description;
     private float $price;
     private string $finished;
@@ -12,7 +12,7 @@ class Service
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->id_service;
     }
 
     public function getDescription(): ?string

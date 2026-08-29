@@ -10,6 +10,28 @@ class UserRepository
     public function __construct(private PDO $pdo)
     {
     }
+    
+    public function getUserById(int $id): ?User
+    {
+        $sql = "SELECT * FROM user WHERE id_user = ?";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(1, $id);
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $user = new User();
+            $user->setId(intval($result['id_user']));
+            $user->setName($result['name']);
+            $user->setEmail($result['email']);
+            $user->setPassword($result['password']);
+            $user->setAtivo($result['ativo']);
+
+            return $user;
+        }
+
+        return null;
+    }
     public function getUserByEmail(string $email): ?User
     {
         $sql = "SELECT * FROM user WHERE email = ?";

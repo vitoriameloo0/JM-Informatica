@@ -127,6 +127,15 @@ body {
         padding: 25px 18px;
 }
 
+.sidebar a {
+    display: block;
+    margin-bottom: 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
 .usuario {
     font-size: 12px;
     line-height: 1.5;
@@ -136,11 +145,6 @@ body {
 .usuario strong {
     display: block;
     font-size: 13px;
-}
-
-.menu {
-    font-size: 13px;
-    font-weight: bold;
 }
 
 .content {

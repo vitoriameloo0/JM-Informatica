@@ -1,36 +1,3 @@
-<?php
-
-// Dados de exemplo
-$servicos = [
-    [
-        'id' => '4585874',
-        'descricao' => 'Troca de Tela LED',
-        'valor' => 425.00,
-        'status' => 'PENDENTE'
-    ],
-    [
-        'id' => '9945258',
-        'descricao' => 'Limpeza de Computador',
-        'valor' => 100.00,
-        'status' => 'FINALIZADO'
-    ]
-];
-
-// Dados exibidos nas listas
-$ultimosServicos = [
-    '127569 - Troca de Tela de Notebook',
-    '986759 - Conserto de carregador',
-    '567867 - Troca de pasta térmica'
-];
-
-$servicosPendentes = [
-    '4562345 - Instalação de Office 2016',
-    '4585458 - Reparo de Sistema Operacional',
-    '458745 - Troca de Memória'
-];
-
-?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -46,11 +13,11 @@ $servicosPendentes = [
         <aside class="sidebar">
             <div class="usuario">
                 Logado como:
-                <strong>José Silva</strong>
+                <strong><?= htmlspecialchars($user->getName()) ?></strong>
             </div>
-            <div class="menu">
+            <a href="/create-service">
                 Cadastrar Serviço
-            </div>
+            </a>
         </aside>
 
         <main class="content">
@@ -59,9 +26,10 @@ $servicosPendentes = [
                 <div class="service-section">
                     <h2>Últimos Serviços</h2>
                     <ul>
-                        <?php foreach ($ultimosServicos as $servico): ?>
+                        <?php foreach ($recentServices as $recentService): ?>
                         <li>
-                            <?= htmlspecialchars($servico) ?>
+                            <?= htmlspecialchars($recentService['id_service']) ?> -
+                            <?= htmlspecialchars($recentService['description']) ?>
                         </li>
                         <?php endforeach; ?>
                     </ul>
@@ -69,9 +37,10 @@ $servicosPendentes = [
                 <div class="service-section">
                     <h2>Serviços Pendentes</h2>
                     <ul>
-                        <?php foreach ($servicosPendentes as $servico): ?>
+                        <?php foreach ($pendingServices as $pendingService): ?>
                         <li>
-                            <?= htmlspecialchars($servico) ?>
+                            <?= htmlspecialchars($pendingService['id_service']) ?> -
+                            <?= htmlspecialchars($pendingService['description']) ?>
                         </li>
                         <?php endforeach; ?>
                     </ul>
@@ -89,26 +58,26 @@ $servicosPendentes = [
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th class="">ID</th>
                             <th>DESCRIÇÃO</th>
                             <th>VALOR</th>
                             <th>STATUS</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($servicos as $servico): ?>
+                        <?php foreach ($services as $service): ?>
                         <tr>
                             <td>
-                                <?= htmlspecialchars($servico['id']) ?>
+                                <?= htmlspecialchars($service['id_service']) ?>
                             </td>
                             <td>
-                                <?= htmlspecialchars($servico['descricao']) ?>
+                                <?= htmlspecialchars($service['description']) ?>
                             </td>
                             <td>
-                                R$ <?= number_format($servico['valor'], 2, ',', '.') ?>
+                                R$ <?= number_format($service['price'], 2, ',', '.') ?>
                             </td>
                             <td>
-                                <?= htmlspecialchars($servico['status']) ?>
+                                <?= htmlspecialchars($service['finished_at'] === null) ? 'Pendente' : 'Finalizado' ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

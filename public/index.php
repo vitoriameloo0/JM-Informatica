@@ -5,6 +5,7 @@ use src\Controller\DashboardController;
 use src\Controller\UserController;
 use src\Controller\ServiceController;
 use src\Repository\UserRepository;
+use src\Repository\ServiceRepository;
 
 require_once __DIR__ . '/../autoload.php';
 require_once __DIR__ . '/../config/database.php';
@@ -32,12 +33,13 @@ if(!isset($routes[$httpMethod][$uri])) {
 
 [$controller, $action] = $routes[$httpMethod][$uri];
 $userRepository = new UserRepository($pdo); 
+$serviceRepository = new ServiceRepository($pdo); 
 
 $controller = match ($controller) {
     'LoginController' => new LoginController($userRepository),
-    'DashboardController' => new DashboardController(),
+    'DashboardController' => new DashboardController($userRepository, $serviceRepository),
     'UserController' => new UserController($userRepository),
-    'ServiceController' => new ServiceController(),
+    'ServiceController' => new ServiceController($serviceRepository, $userRepository),
     default => null,
 };
 
