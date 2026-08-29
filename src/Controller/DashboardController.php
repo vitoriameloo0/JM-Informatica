@@ -14,7 +14,7 @@ class DashboardController
     public function index(): void
     {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /');
+            header('Location: /login');
             exit;
         }
 
@@ -22,7 +22,7 @@ class DashboardController
         
         if ($user === null) {
             session_destroy();
-            header('Location: /');
+            header('Location: /login');
             exit;
         }
 

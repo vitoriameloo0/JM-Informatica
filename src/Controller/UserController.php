@@ -19,19 +19,19 @@ class UserController
     {
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         if ($email === false) {
-            header('Location: /');
+            header('Location: /login');
             return;
         }
         $password = filter_input(INPUT_POST, 'password');
         if ($password === false) {
-            header('Location: /');
+            header('Location: /login'); 
             return;
         }
 
         $name = explode('@', $email)[0];
         $success = $this->userRepository->addUser(new User($name, $email, $password, true));
         if ($success === false) {
-            header('Location: /');
+            header('Location: /login');
         } else {
             header('Location: /dashboard');
         }

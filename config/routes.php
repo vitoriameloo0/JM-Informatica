@@ -12,6 +12,10 @@ $routes = [
         '/login' => ['LoginController', 'login'],
         '/create-user' => ['UserController', 'createUser'],
         '/create-service' => ['ServiceController', 'createService'],
+        '/edit-service' => ['ServiceController', 'edit'],
+        '/update-service' => ['ServiceController', 'updateService'],
+        '/delete-service' => ['ServiceController', 'deleteService'],
+        '/finish-service' => ['ServiceController', 'finishService'],
     ]
 ];
 return $routes;

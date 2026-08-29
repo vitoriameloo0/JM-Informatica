@@ -13,7 +13,11 @@
         <aside class="sidebar">
             <div class="usuario">
                 Logado como:
-                <strong><?= htmlspecialchars($user->getName()) ?></strong>
+                <strong><?= htmlspecialchars(is_object($user) ? $user->getName() : $user) ?></strong>
+            </div>
+            <div class="usuario">
+                Data:
+                <strong><?= date('d/m/Y') ?></strong>
             </div>
             <a href="/create-service">
                 Cadastrar Serviço
@@ -22,6 +26,23 @@
 
         <main class="content">
             <h1>DASHBOARD</h1>
+
+            <?php if (isset($_SESSION['success'])): ?>
+            <div class="success-message">
+                <?= htmlspecialchars($_SESSION['success']) ?>
+            </div>
+
+            <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['error'])): ?>
+            <div class="error-message">
+                <?= htmlspecialchars($_SESSION['error']) ?>
+            </div>
+
+            <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+
             <section class="services">
                 <div class="service-section">
                     <h2>Últimos Serviços</h2>
@@ -62,6 +83,7 @@
                             <th>DESCRIÇÃO</th>
                             <th>VALOR</th>
                             <th>STATUS</th>
+                            <th>AÇÕES</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,7 +99,32 @@
                                 R$ <?= number_format($service['price'], 2, ',', '.') ?>
                             </td>
                             <td>
-                                <?= htmlspecialchars($service['finished_at'] === null) ? 'Pendente' : 'Finalizado' ?>
+                                <?= htmlspecialchars($service['finished_at'] === null ? 'Pendente' : 'Finalizado') ?>
+                            </td>
+                            <td class="actions">
+                                <form action="/edit-service" method="POST">
+                                    <input type="hidden" name="id_service"
+                                        value="<?= htmlspecialchars($service['id_service']) ?>">
+                                    <button type="submit">
+                                        Editar
+                                    </button>
+                                </form>
+                                <form action="/delete-service" method="POST">
+                                    <input type="hidden" name="id_service"
+                                        value="<?= htmlspecialchars($service['id_service']) ?>">
+
+                                    <button type="submit">
+                                        Excluir
+                                    </button>
+                                </form>
+                                <form action="/finish-service" method="POST">
+                                    <input type="hidden" name="id_service"
+                                        value="<?= htmlspecialchars($service['id_service']) ?>">
+
+                                    <button type="submit">
+                                        Finalizar
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         <?php endforeach; ?>

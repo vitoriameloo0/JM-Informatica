@@ -2,6 +2,8 @@
 
 namespace src\Entity;
 
+use IntlChar;
+
 class Service
 {
     private int $id_service;
@@ -10,56 +12,53 @@ class Service
     private string $finished;
     private float $commission;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id_service;
     }
 
-    public function getDescription(): ?string
+    public function setId(int $id_service):void
+    {
+        $this->id_service = $id_service;
+    }
+    
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(string $description): void
     {
         $this->description = $description;
-
-        return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): self
+    public function setPrice(float $price): void
     {
         $this->price = $price;
-
-        return $this;
     }
     
-    public function getFinished(): ?string
+    public function getFinish(): string
     {
         return $this->finished;
     }
 
-    public function setFinished(string $finished): self
+    public function setFinish(string $finished): void
     {
         $this->finished = $finished;
-
-        return $this;
     }
 
-    public function getCommission(): ?float
+    public function getCommission(): float
     {
         return $this->commission;
     }
 
-    public function setCommission(float $commission): self
+    public function setCommission(float $commission): void
     {
         $this->commission = $commission;
-
-        return $this;
     }
 }

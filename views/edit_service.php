@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Serviço</title>
+    <title>Editar Serviço</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
     <main class="container">
         <div class="box">
-            <h1>Cadastrar Novo Serviço</h1>
+            <h1>Editar Serviço</h1>
 
             <?php if (isset($_SESSION['success'])): ?>
             <div class="success-message">
@@ -29,24 +29,25 @@
             <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
 
-            <form action="/create-service" method="POST">
+            <form action="/update-service" method="POST">
+                <input type="hidden" name="id_service" value="<?= htmlspecialchars($service->getId()) ?>">
                 <div class="form-group">
                     <label for="service_description">
                         Descrição
                     </label>
                     <input type="text" id="description" name="description" placeholder="Descrição do Serviço"
-                        value="<?= htmlspecialchars($_POST['description'] ?? '') ?>">
+                        value="<?= htmlspecialchars($service->getDescription()) ?>">
                 </div>
                 <div class="form-group">
                     <label for="price">
                         Preço
                     </label>
                     <input type="text" id="price" name="price" placeholder="Preço do Serviço"
-                        value="<?= htmlspecialchars($_POST['price'] ?? '') ?>">
+                        value="<?= htmlspecialchars($service->getPrice()) ?>">
                 </div>
                 <div class="actions">
                     <button type="submit" class="submit-button">
-                        Cadastrar
+                        Salvar
                     </button>
                 </div>
             </form>

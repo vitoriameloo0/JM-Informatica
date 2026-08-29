@@ -13,10 +13,20 @@
         <div class="box">
             <h1>Cadastrar Novo Usuário</h1>
 
-            <?php if (isset($error)): ?>
-            <div class="error-message">
-                <?= htmlspecialchars($error) ?>
+            <?php if (isset($_SESSION['success'])): ?>
+            <div class="success-message">
+                <?= htmlspecialchars($_SESSION['success']) ?>
             </div>
+
+            <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['error'])): ?>
+            <div class="error-message">
+                <?= htmlspecialchars($_SESSION['error']) ?>
+            </div>
+
+            <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
 
             <form action="/create-user" method="POST">
@@ -34,7 +44,7 @@
                     <input type="password" id="password" name="password" placeholder="****************">
                 </div>
                 <div class="actions">
-                    <button type="submit" class="login">
+                    <button type="submit" class="button">
                         Cadastrar
                     </button>
                 </div>
