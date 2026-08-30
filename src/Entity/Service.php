@@ -1,9 +1,6 @@
 <?php
 
 namespace src\Entity;
-
-use IntlChar;
-
 class Service
 {
     private int $id_service;
@@ -11,6 +8,7 @@ class Service
     private float $price;
     private string $finished;
     private float $commission;
+    private int $user_id;
 
     public function getId(): int
     {
@@ -60,5 +58,15 @@ class Service
     public function setCommission(float $commission): void
     {
         $this->commission = $commission;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(int $user_id): void
+    {
+        $this->user_id = $user_id;
     }
 }

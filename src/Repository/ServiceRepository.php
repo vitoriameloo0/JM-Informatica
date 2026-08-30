@@ -16,7 +16,7 @@ class ServiceRepository
     // Seleciona os serviços do usuário finalizado
     public function userRecentService(User $user): array
     {
-        $sql = "SELECT * FROM service WHERE user_id_user = ? ORDER BY id_service";
+        $sql = "SELECT * FROM service WHERE user_id_user = ? ORDER BY id_service DESC LIMIT 5";
         $statement = $this->pdo->prepare($sql);
         $statement->bindValue(1, $user->getId(), PDO::PARAM_INT);
         $statement->execute();
@@ -33,13 +33,47 @@ class ServiceRepository
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Seleciona todos os serviços do usuário
-    public function allServices(User $user): array
+    // Seleciona todos os serviços
+    public function allServices(array $filters = []): array
     {
-        $sql = "SELECT * FROM service WHERE user_id_user = ?";
+        $sql = "SELECT service.*, user.name AS user_name FROM service INNER JOIN user
+            ON user.id_user = service.user_id_user WHERE 1=1";
+            
+        $params = [];
+        
+        if (!empty($filters['start_date'])) {
+            $sql .= " AND service.created_at >= :start_date";
+            $params['start_date'] = $filters['start_date'] . ' 00:00:00';
+        }
+
+        if (!empty($filters['end_date'])) {
+            $sql .= " AND service.finished_at < :end_date";
+            $params['end_date'] = date(
+                'Y-m-d',
+                strtotime($filters['end_date'] . ' +1 day')
+            ) . ' 00:00:00';
+        }
+        if (!empty($filters['service'])) {
+            $sql .= " AND service.description = :service";
+            $params['service'] = $filters['service'];
+        }
+        if (!empty($filters['status'])) {
+            if ($filters['status'] === 'pending') {
+                $sql .= " AND service.finished_at IS NULL";
+            } elseif ($filters['status'] === 'finished') {
+                $sql .= " AND service.finished_at IS NOT NULL";
+            }
+        }
+        if (!empty($filters['user'])) {
+            $sql .= " AND user.name LIKE :user";
+            $params['user'] = "%".$filters['user']."%";
+        }
+        
+
+        $sql .= " ORDER BY service.id_service DESC";
+
         $statement = $this->pdo->prepare($sql);
-        $statement->bindValue(1, $user->getId(), PDO::PARAM_INT);
-        $statement->execute();
+        $statement->execute($params);
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -90,18 +124,31 @@ class ServiceRepository
         $service->setId($serviceData['id_service']);
         $service->setDescription($serviceData['description']);
         $service->setPrice($serviceData['price']);
+        $service->setUserId($serviceData['user_id_user']);
 
         return $service;
     }
 
     // Marca um serviço como finalizado
-    public function finishService(int $id, string $date): bool
+    public function finishService(int $id, string $date, float $commission): bool
     {
-        $sql = "UPDATE service SET finished_at = ? WHERE id_service = ?";
+        $sql = "UPDATE service SET finished_at = ?, commission = ? WHERE id_service = ?";
         $statement = $this->pdo->prepare($sql);
         $statement->bindValue(1, $date, PDO::PARAM_STR);
-        $statement->bindValue(2, $id, PDO::PARAM_INT);
+        $statement->bindValue(2, $commission, PDO::PARAM_STR);
+        $statement->bindValue(3, $id, PDO::PARAM_INT);
         return $statement->execute();
+    }
+
+    // Calcula o total de serviços finalizados do usuário
+    public function totalServices(User $user): float
+    {
+        $sql = "SELECT COALESCE(SUM(price), 0) FROM service WHERE finished_at IS NOT NULL AND user_id_user = ?";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(1, $user->getId(), PDO::PARAM_INT);
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        return (float) $result['COALESCE(SUM(price), 0)'];
     }
 
 }

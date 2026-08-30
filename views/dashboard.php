@@ -67,19 +67,46 @@
                     </ul>
                 </div>
             </section>
-            <form class="filters" method="GET">
-                <input type="text" name="nome" placeholder="Nome">
-                <input type="date" name="data_inicio" value="2024-08-15">
-                <input type="date" name="data_fim" value="2024-08-26">
+            <div>
+                <strong>Valor total dos serviços de
+                    <?= htmlspecialchars(is_object($user) ? $user->getName() : $user)  ?>:</strong> R$
+                <?= number_format($totalServices, 2, ',', '.') ?>
+            </div>
+
+            <br>
+
+            <form class="filters" method="GET" action="/dashboard">
+                <input type="text" name="user" placeholder="Nome do usuário"
+                    value="<?= htmlspecialchars($_GET['user'] ?? '') ?>">
+
+                <input type="text" name="service" placeholder="Nome do serviço"
+                    value="<?= htmlspecialchars($_GET['description'] ?? '') ?>">
+
+                <input type="date" name="start_date" value="<?= htmlspecialchars($_GET['start_date'] ?? '') ?>">
+
+                <input type="date" name="end_date" value="<?= htmlspecialchars($_GET['end_date'] ?? '') ?>">
+
+                <select name="status">
+                    <option value="">Todos os status</option>
+                    <option value="pending" <?= ($_GET['status'] ?? '') === 'pending' ? 'selected' : '' ?>>
+                        Pendente
+                    </option>
+
+                    <option value="finished" <?= ($_GET['status'] ?? '') === 'finished' ? 'selected' : '' ?>>
+                        Finalizado
+                    </option>
+                </select>
                 <button type="submit">
                     Filtrar
                 </button>
             </form>
+
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th class="">ID</th>
+                            <th>ID</th>
+                            <th>USER</th>
                             <th>DESCRIÇÃO</th>
                             <th>VALOR</th>
                             <th>STATUS</th>
@@ -91,6 +118,9 @@
                         <tr>
                             <td>
                                 <?= htmlspecialchars($service['id_service']) ?>
+                            </td>
+                            <td>
+                                <?= htmlspecialchars($service['user_name']) ?>
                             </td>
                             <td>
                                 <?= htmlspecialchars($service['description']) ?>
@@ -131,6 +161,7 @@
                     </tbody>
                 </table>
             </div>
+
         </main>
     </div>
 </body>
