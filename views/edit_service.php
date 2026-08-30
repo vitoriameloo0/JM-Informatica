@@ -42,7 +42,7 @@
                     <label for="price">
                         Preço
                     </label>
-                    <input type="text" id="price" name="price" placeholder="Preço do Serviço"
+                    <input type="number" step="0.01" id="price" name="price" placeholder="Preço do Serviço"
                         value="<?= htmlspecialchars($service->getPrice()) ?>">
                 </div>
                 <div class="actions">
