@@ -3,17 +3,17 @@
 namespace src\Controller;
 
 use src\Entity\Service;
-use src\Entity\User;
 use src\Repository\ServiceRepository;
 use src\Repository\UserRepository;
+use src\Service\MailService;
 
 class ServiceController
 {
-    public function __construct(private ServiceRepository $serviceRepository, private UserRepository $userRepository)
+    public function __construct(private ServiceRepository $serviceRepository, private UserRepository $userRepository, private MailService $mailService)
     {
     }
 
-    // Vai para a tela de cadastro de serviço
+    // Redireciona para a tela de cadastro de serviço
     public function index(): void
     {
         require_once __DIR__ . '/../../views/create_service.php';
@@ -59,8 +59,9 @@ class ServiceController
             exit;
         }
     }
-    // Vai para a tela de edição do serviço
-    public function edit(): void
+    
+    // Redireciona para a tela de edição do serviço
+    public function editService(): void
     {
         $id = filter_input(INPUT_POST, 'id_service', FILTER_VALIDATE_INT);
 
@@ -120,8 +121,10 @@ class ServiceController
 
         $success = $this->serviceRepository->deleteService($id);
         if ($success === false) {
+            $_SESSION['error'] = 'Não foi possivel deletar';
             header('Location: /dashboard');
         } else {
+            $_SESSION['error'] = 'Serviço deletado com sucesso';
             header('Location: /dashboard');
         }
     }
@@ -140,14 +143,31 @@ class ServiceController
             header('Location: /dashboard');
             return;
         }
+        
+        // Calculo das comissoes 
+        if($service->getPrice()<= 1000) {
+            $service->setCommission($service->getPrice() * 0.05); 
+        } else if($service->getPrice() > 1000 && $service->getPrice() <= 10000) {
+            $service->setCommission($service->getPrice() * 0.10); 
+        } else if($service->getPrice() > 10000){
+            $service->setCommission($service->getPrice() * 0.20); 
+        }
 
         $service->setFinish(date('Y-m-d H:i:s'));
-        $success = $this->serviceRepository->finishService($service->getId(), $service->getFinish());
+        $success = $this->serviceRepository->finishService($service->getId(), $service->getFinish(), $service->getCommission());
 
         if ($success === false) {
             header('Location: /dashboard');
+        } 
+        
+        $user = $this->userRepository->getUserById($service->getUserId());
+        $emailSent = $this->mailService->sendMail($user->getEmail(), $user->getName(), $service->getDescription());
+
+        if (!$emailSent) {
+            $_SESSION['error'] = 'Serviço finalizado, mas não foi possível enviar o e-mail.';
         } else {
-            header('Location: /dashboard');
+            $_SESSION['success'] = 'Serviço finalizado e e-mail enviado com sucesso.';
         }
+        header('Location: /dashboard');
     }
 }
