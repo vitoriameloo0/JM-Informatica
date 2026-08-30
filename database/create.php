@@ -1,87 +1,52 @@
 <?php
 
 require_once __DIR__ . '/../config/database.php';
-
+// Arquivo destinado para inserir dados inciais no banco
 $users = [
     [
-        'name' => 'Maria',
-        'email' => 'maria@email.com',
-        'password' => 'maria123456',
+        'name' => 'Jose Silva',
+        'email' => 'jose@email.com',
+        'password' => 'jose123456',
         'services' => [
             [
-                'description' => 'Manutenção de computador',
-                'price' => 150.000,
-                'commission' => 30.000,
+                'description' => 'Troca de tela do notebook',
+                'price' => 450,
                 'finished_at' => null
             ],
             [
-                'description' => 'Instalação de software',
-                'price' => 80.000,
-                'commission' => 15.000,
-                'finished_at' => '2026-08-20 15:30:00'
+                'description' => 'Conserto do carregador',
+                'price' => 100,
+                'commission' => 5,
+                'finished_at' => '2026-09-01 15:30:00'
+            ],
+            [
+                'description' => 'Troca da pasta térmica',
+                'price' => 100,
+                'commission' => 5,
+                'finished_at' => '2026-09-01 15:30:00'
+            ],
+            [
+                'description' => 'Instalação do Office 2016',
+                'price' => 150,
+                'finished_at' => null
+            ],
+            [
+                'description' => 'Troca de Memória',
+                'price' => 50.00,
+                'finished_at' => null
+            ],
+            [
+                'description' => 'Troca da Tela LED',
+                'price' => 425.00,
+                'finished_at' => null
+            ],
+            [
+                'description' => 'Limpeza de notebook',
+                'price' => 100.00,
+                'finished_at' => '2026-09-01 15:30:00'
             ]
         ]
     ],
-
-    [
-        'name' => 'Joao',
-        'email' => 'joao@email.com',
-        'password' => 'joao123',
-        'services' => [
-            [
-                'description' => 'Formatação de computador',
-                'price' => 120.000,
-                'commission' => 25.000,
-                'finished_at' => '2026-08-21 10:00:00'
-            ],
-            [
-                'description' => 'Limpeza interna',
-                'price' => 100.000,
-                'commission' => 20.000,
-                'finished_at' => null
-            ]
-        ]
-    ],
-
-    [
-        'name' => 'Ana',
-        'email' => 'ana@email.com',
-        'password' => 'ana123',
-        'services' => [
-            [
-                'description' => 'Troca de HD',
-                'price' => 250.000,
-                'commission' => 50.000,
-                'finished_at' => '2026-08-22 14:00:00'
-            ],
-            [
-                'description' => 'Instalação de impressora',
-                'price' => 90.000,
-                'commission' => 18.000,
-                'finished_at' => null
-            ]
-        ]
-    ],
-
-    [
-        'name' => 'Lucas',
-        'email' => 'lucas@email.com',
-        'password' => 'lucas123',
-        'services' => [
-            [
-                'description' => 'Configuração de rede',
-                'price' => 180.000,
-                'commission' => 35.000,
-                'finished_at' => '2026-08-23 09:30:00'
-            ],
-            [
-                'description' => 'Manutenção de notebook',
-                'price' => 200.000,
-                'commission' => 40.000,
-                'finished_at' => null
-            ]
-        ]
-    ]
 ];
 
 $sqlUser = '
@@ -123,19 +88,18 @@ try {
             'email' => $user['email'],
             'password' => $hashedPassword
         ]);
-
-        // Pega o ID do usuário criado
+        
         $userId = $pdo->lastInsertId();
 
         echo "Usuário criado: {$user['name']} - {$user['email']}\n";
 
-        // Cria os serviços desse usuário
+
         foreach ($user['services'] as $service) {
 
             $stmtService->execute([
                 'description' => $service['description'],
                 'price' => $service['price'],
-                'commission' => $service['commission'],
+                'commission' => $service['commission'] ?? null,
                 'finished_at' => $service['finished_at'],
                 'user_id_user' => $userId
             ]);

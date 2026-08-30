@@ -12,11 +12,13 @@ class LoginController
         $this->userRepository = $userRepository;
     }
     
+    // Funcao para exibir a tela de login
     public function index(): void
     {
         require_once __DIR__ . '/../../views/login.php';
     }
-
+    
+    // Funcao que faz o login 
     public function login() : void
     {
         $email = trim($_POST['email'] ?? '');
@@ -46,6 +48,7 @@ class LoginController
         exit;
     }
 
+    // Funcao que faz o logout do usuario  
     public function logout(): void
     {
         session_unset();

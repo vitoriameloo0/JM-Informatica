@@ -10,11 +10,13 @@ class UserController
     public function __construct(private UserRepository $userRepository)
     {
     }
+    // Redireciona para a tela de cadastro de usuario
     public function index(): void
     {
         require_once __DIR__ . '/../../views/create_user.php';
     }
 
+    // Cria um usuario
     public function createUser(): void
     {
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);

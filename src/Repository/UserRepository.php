@@ -11,6 +11,7 @@ class UserRepository
     {
     }
     
+    // Retorna o usuario a partir do seu id
     public function getUserById(int $id): ?User
     {
         $sql = "SELECT * FROM user WHERE id_user = ?";
@@ -32,6 +33,8 @@ class UserRepository
 
         return null;
     }
+
+    // Retornar o usuario a partir do seu email
     public function getUserByEmail(string $email): ?User
     {
         $sql = "SELECT * FROM user WHERE email = ?";
@@ -54,6 +57,7 @@ class UserRepository
         return null;
     }
     
+    // Adiciona um novo usuario
     public function addUser(User $user): bool
     {
         $passwordHash = password_hash($user->getPassword(), PASSWORD_ARGON2I);
